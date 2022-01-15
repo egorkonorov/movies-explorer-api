@@ -2,7 +2,7 @@ const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 const {
   getmyMovies, createMovie, deleteMovie
-} = require('../controllers/users');
+} = require('../controllers/movies');
 const auth = require('../middlewares/auth');
 
 router.post('/movies', celebrate({

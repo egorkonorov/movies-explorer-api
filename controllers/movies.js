@@ -1,4 +1,4 @@
-const Movie = require('../models/card');
+const Movie = require('../models/movie');
 const NotFoundError = require('../errors/not-found-err');
 const ValidationError = require('../errors/server-err');
 const ServerError = require('../errors/server-err');

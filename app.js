@@ -44,7 +44,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/', require('./routes/users'));
-app.use('/', require('./routes/cards'));
+app.use('/', require('./routes/movies'));
 app.use(requestLogger);
 
 
