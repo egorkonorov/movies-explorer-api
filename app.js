@@ -7,8 +7,8 @@ const NotFoundError = require('./errors/not-found-err');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const allowedCors = [
-  'https://frontend.konorov.nomoredomains.rocks',
-  'http://frontend.konorov.nomoredomains.rocks',
+  'https://frontend.diploma.nomoredomains.rocks',
+  'http://frontend.diploma.nomoredomains.rocks',
   'http://localhost:3000',
   'http://localhost:3000',
   'https://localhost:3001',
