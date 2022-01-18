@@ -2,9 +2,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 require('dotenv').config();
-const { celebrate, Joi, errors } = require('celebrate');
+const { errors } = require('celebrate');
 const NotFoundError = require('./errors/not-found-err');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+
+const { DATABASE_ADRESS, NODE_ENV } = process.env;
 
 const allowedCors = [
   'https://frontend.diploma.nomoredomains.rocks',
@@ -15,14 +17,10 @@ const allowedCors = [
   'https://localhost:3001',
 ];
 
-const { createUser, login } = require('./controllers/users');
-
 const { PORT = 3000 } = process.env;
 const app = express();
 
-
-
-app.use(function(req, res, next){
+app.use(function(req, res, next) {
   const { origin } = req.headers;
   if (allowedCors.includes(origin)) {
     res.header('Access-Control-Allow-Origin', origin);
@@ -38,30 +36,19 @@ app.use(function(req, res, next){
   next();
 });
 
-mongoose.connect('mongodb://localhost:27017/diplomabd');
+mongoose.connect(NODE_ENV === 'production' ? DATABASE_ADRESS : 'mongodb://localhost:27017/diplomabd');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
-app.use('/', require('./routes/users'));
-app.use('/', require('./routes/movies'));
 app.use(requestLogger);
 
+app.use(require('./routes/users'));
 
-app.post('/signin', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required().min(8),
-  }),
-}), login);
+app.use(require('./routes/movies'));
 
-app.post('/signup', celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    email: Joi.string().required().email(),
-    password: Joi.string().required().min(8),
-  }),
-}), createUser);
+app.use(require('./routes/signin'));
+
+app.use(require('./routes/signup'));
 
 app.use((req, res, next) => {
   next(new NotFoundError('Маршрут не найден'));

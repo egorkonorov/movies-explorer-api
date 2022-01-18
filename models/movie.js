@@ -11,7 +11,7 @@ const movieSchema = new mongoose.Schema({
     required: true,
   },
   duration: {
-    type: String,
+    type: Number,
     required: true,
   },
   year: {
@@ -40,7 +40,7 @@ const movieSchema = new mongoose.Schema({
     },
     required: true,
   },
-  thumbnail : {
+  thumbnail: {
     type: String, validate: {
       validator: function (v) {
         return /https?:\/\/w{0,3}?\.?[\w\W]+/.test(v);
