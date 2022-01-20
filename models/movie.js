@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const validator = require('validator');
 
 const movieSchema = new mongoose.Schema({
   country: {
@@ -23,8 +22,9 @@ const movieSchema = new mongoose.Schema({
     required: true,
   },
   image: {
-    type: String, validate: {
-      validator: function (v) {
+    type: String,
+    validate: {
+      validator(v) {
         return /https?:\/\/w{0,3}?\.?[\w\W]+/.test(v);
       },
       message: (props) => `${props.value} Неверная ссылка!`,
@@ -32,8 +32,9 @@ const movieSchema = new mongoose.Schema({
     required: true,
   },
   trailer: {
-    type: String, validate: {
-      validator: function (v) {
+    type: String,
+    validate: {
+      validator(v) {
         return /https?:\/\/w{0,3}?\.?[\w\W]+/.test(v);
       },
       message: (props) => `${props.value} Неверная ссылка!`,
@@ -41,8 +42,9 @@ const movieSchema = new mongoose.Schema({
     required: true,
   },
   thumbnail: {
-    type: String, validate: {
-      validator: function (v) {
+    type: String,
+    validate: {
+      validator(v) {
         return /https?:\/\/w{0,3}?\.?[\w\W]+/.test(v);
       },
       message: (props) => `${props.value} Неверная ссылка!`,

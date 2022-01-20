@@ -5,6 +5,7 @@ require('dotenv').config();
 const { errors } = require('celebrate');
 const NotFoundError = require('./errors/not-found-err');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const auth = require('./middlewares/auth');
 
 const { DATABASE_ADRESS, NODE_ENV } = process.env;
 
@@ -20,7 +21,7 @@ const allowedCors = [
 const { PORT = 3000 } = process.env;
 const app = express();
 
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
   const { origin } = req.headers;
   if (allowedCors.includes(origin)) {
     res.header('Access-Control-Allow-Origin', origin);
@@ -41,6 +42,8 @@ mongoose.connect(NODE_ENV === 'production' ? DATABASE_ADRESS : 'mongodb://localh
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(requestLogger);
+
+app.use(auth);
 
 app.use(require('./routes/users'));
 

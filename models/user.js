@@ -5,14 +5,14 @@ const bcrypt = require('bcryptjs');
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    default: 'Аноним',
     minlength: 2,
     maxlength: 30,
     required: true,
   },
   email: {
-    type: String, validate: {
-      validator: function(v) {
+    type: String,
+    validate: {
+      validator(v) {
         return validator.isEmail(v);
       },
       message: (props) => `${props.value} Неверный email!`,
