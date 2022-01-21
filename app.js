@@ -42,16 +42,15 @@ mongoose.connect(NODE_ENV === 'production' ? DATABASE_ADRESS : 'mongodb://localh
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(requestLogger);
+app.use(require('./routes/signin'));
+
+app.use(require('./routes/signup'));
 
 app.use(auth);
 
 app.use(require('./routes/users'));
 
 app.use(require('./routes/movies'));
-
-app.use(require('./routes/signin'));
-
-app.use(require('./routes/signup'));
 
 app.use((req, res, next) => {
   next(new NotFoundError('Маршрут не найден'));
