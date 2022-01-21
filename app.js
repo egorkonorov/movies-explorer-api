@@ -6,8 +6,9 @@ require('dotenv').config();
 const { errors } = require('celebrate');
 const NotFoundError = require('./errors/not-found-err');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-const auth = require('./middlewares/auth');
 const limiter = require('./ratelimiter');
+
+const router = require('./routes/index');
 
 const { DATABASE_ADRESS, NODE_ENV } = process.env;
 
@@ -39,7 +40,7 @@ app.use((req, res, next) => {
   next();
 });
 
-mongoose.connect(NODE_ENV === 'production' ? DATABASE_ADRESS : 'mongodb://localhost:27017/diplomabd');
+mongoose.connect(NODE_ENV === 'production' ? DATABASE_ADRESS : 'mongodb://localhost:27017/moviesdb');
 
 app.use(limiter);
 app.use(helmet());
@@ -47,15 +48,7 @@ app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(requestLogger);
-app.use(require('./routes/signin'));
-
-app.use(require('./routes/signup'));
-
-app.use(auth);
-
-app.use(require('./routes/users'));
-
-app.use(require('./routes/movies'));
+app.use('/', router);
 
 app.use((req, res, next) => {
   next(new NotFoundError('Маршрут не найден'));
