@@ -8,7 +8,7 @@ const auth = require('../middlewares/auth');
 router.patch('/users/me', celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
-    email: Joi.string().pattern(/https?:\/\/w{0,3}?\.?[\w\W]+/),
+    email: Joi.string().email().required(),
   }),
 }), auth, editUserProfile);
 

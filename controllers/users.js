@@ -1,7 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-const NotFoundError = require('../errors/not-found-err');
 const ValidationError = require('../errors/server-err');
 const ServerError = require('../errors/server-err');
 const MongoError = require('../errors/mongo-err');
@@ -25,6 +24,8 @@ module.exports.editUserProfile = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         throw new ValidationError('Ошибка валидации');
+      } else if (err.code === 11000) {
+        throw new MongoError('Такой email уже используется');
       } else {
         throw new ServerError(`Произошла серверная ошибка ${err}`);
       }
@@ -66,7 +67,7 @@ module.exports.createUser = (req, res, next) => {
       if (err.name === 'ValidationError') {
         throw new ValidationError('Ошибка валидации');
       } else if (err.code === 11000) {
-        throw new MongoError('Такое имя пользователя уже используется');
+        throw new MongoError('Такой email уже используется');
       } else {
         throw err;
       }

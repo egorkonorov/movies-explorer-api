@@ -1,28 +1,30 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const helmet = require('helmet');
 require('dotenv').config();
-const { celebrate, Joi, errors } = require('celebrate');
+const { errors } = require('celebrate');
 const NotFoundError = require('./errors/not-found-err');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const limiter = require('./ratelimiter');
+
+const router = require('./routes/index');
+
+const { DATABASE_ADRESS, NODE_ENV } = process.env;
 
 const allowedCors = [
-  'https://frontend.konorov.nomoredomains.rocks',
-  'http://frontend.konorov.nomoredomains.rocks',
+  'https://frontend.diploma.nomoredomains.rocks',
+  'http://frontend.diploma.nomoredomains.rocks',
   'http://localhost:3000',
   'http://localhost:3000',
   'https://localhost:3001',
   'https://localhost:3001',
 ];
 
-const { createUser, login } = require('./controllers/users');
-
 const { PORT = 3000 } = process.env;
 const app = express();
 
-
-
-app.use(function(req, res, next){
+app.use((req, res, next) => {
   const { origin } = req.headers;
   if (allowedCors.includes(origin)) {
     res.header('Access-Control-Allow-Origin', origin);
@@ -38,30 +40,15 @@ app.use(function(req, res, next){
   next();
 });
 
-mongoose.connect('mongodb://localhost:27017/diplomabd');
+mongoose.connect(NODE_ENV === 'production' ? DATABASE_ADRESS : 'mongodb://localhost:27017/moviesdb');
+
+app.use(limiter);
+app.use(helmet());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
-app.use('/', require('./routes/users'));
-app.use('/', require('./routes/movies'));
 app.use(requestLogger);
-
-
-app.post('/signin', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required().min(8),
-  }),
-}), login);
-
-app.post('/signup', celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    email: Joi.string().required().email(),
-    password: Joi.string().required().min(8),
-  }),
-}), createUser);
+app.use('/', router);
 
 app.use((req, res, next) => {
   next(new NotFoundError('Маршрут не найден'));

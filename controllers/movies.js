@@ -1,6 +1,6 @@
 const Movie = require('../models/movie');
 const NotFoundError = require('../errors/not-found-err');
-const ValidationError = require('../errors/server-err');
+const ValidationError = require('../errors/validation-err');
 const ServerError = require('../errors/server-err');
 const ForbiddenError = require('../errors/forbidden-err');
 
@@ -15,18 +15,17 @@ module.exports.getmyMovies = (req, res, next) => {
 
 module.exports.createMovie = (req, res, next) => {
   Movie.create({
-    name: req.body.name,
-    country: req.body.name,
-    director: req.body.name,
-    duration: req.body.name,
-    description: req.body.name,
-    image: req.body.name,
-    trailer: req.body.name,
-    nameRU: req.body.name,
-    nameEN: req.body.name,
-    thumbnail: req.body.name,
-    movieId: req.body.name,
-    year: req.body.name,
+    country: req.body.country,
+    director: req.body.director,
+    duration: req.body.duration,
+    description: req.body.description,
+    image: req.body.image,
+    trailer: req.body.trailer,
+    nameRU: req.body.nameRU,
+    nameEN: req.body.nameEN,
+    thumbnail: req.body.thumbnail,
+    movieId: req.body.movieId,
+    year: req.body.year,
     owner: req.user._id,
   })
 

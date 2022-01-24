@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const validator = require('validator');
 
 const movieSchema = new mongoose.Schema({
   country: {
@@ -11,7 +10,7 @@ const movieSchema = new mongoose.Schema({
     required: true,
   },
   duration: {
-    type: String,
+    type: Number,
     required: true,
   },
   year: {
@@ -23,8 +22,9 @@ const movieSchema = new mongoose.Schema({
     required: true,
   },
   image: {
-    type: String, validate: {
-      validator: function (v) {
+    type: String,
+    validate: {
+      validator(v) {
         return /https?:\/\/w{0,3}?\.?[\w\W]+/.test(v);
       },
       message: (props) => `${props.value} Неверная ссылка!`,
@@ -32,17 +32,19 @@ const movieSchema = new mongoose.Schema({
     required: true,
   },
   trailer: {
-    type: String, validate: {
-      validator: function (v) {
+    type: String,
+    validate: {
+      validator(v) {
         return /https?:\/\/w{0,3}?\.?[\w\W]+/.test(v);
       },
       message: (props) => `${props.value} Неверная ссылка!`,
     },
     required: true,
   },
-  thumbnail : {
-    type: String, validate: {
-      validator: function (v) {
+  thumbnail: {
+    type: String,
+    validate: {
+      validator(v) {
         return /https?:\/\/w{0,3}?\.?[\w\W]+/.test(v);
       },
       message: (props) => `${props.value} Неверная ссылка!`,
@@ -53,11 +55,11 @@ const movieSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
-  movieId: [{
-    type: mongoose.Schema.Types.ObjectId,
+  movieId: {
+    type: Number,
     required: true,
-  }],
-  nameRu: {
+  },
+  nameRU: {
     type: String,
     required: true,
   },
