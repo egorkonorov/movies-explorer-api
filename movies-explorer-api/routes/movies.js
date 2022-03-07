@@ -8,10 +8,10 @@ const auth = require('../middlewares/auth');
 
 router.post('/movies', celebrate({
   body: Joi.object().keys({
-    country: Joi.string().required().min(2).max(30),
-    director: Joi.string().required().min(2).max(30),
+    country: Joi.string().required().min(2),
+    director: Joi.string().required().min(2).max(500),
     duration: Joi.number().required(),
-    description: Joi.string().required().min(2).max(500),
+    description: Joi.string().required().min(2),
     image: Joi.string().required().custom((value, helpers) => {
       if (validator.isURL(value)) {
         return value;
